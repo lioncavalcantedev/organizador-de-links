@@ -1,0 +1,31 @@
+# O Cursor já respeita o .gitignore (vendor/, node_modules/, .env, public/build, etc.).
+# Aqui ficam apenas exclusões ADICIONAIS para indexação e contexto.
+
+# Dependências e build (reforço, caso saiam do .gitignore)
+/vendor
+/node_modules
+/public/build
+/public/hot
+
+# Lock files (grandes e pouco úteis como contexto)
+composer.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Caches e artefatos gerados
+/bootstrap/cache
+/storage/framework
+/storage/logs
+/storage/pail
+*.log
+.phpunit.cache
+.phpunit.result.cache
+
+# Banco de dados local
+/database/*.sqlite
+/database/*.sqlite-journal
+
+# Assets minificados
+*.min.js
+*.min.css
