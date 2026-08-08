@@ -2,8 +2,75 @@
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Onest', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-background-primary: #080807;
+    --color-background-secondary: #110f0e;
+    --color-background-tertiary: #1c1917;
+    --color-background-blur: rgb(11 10 9 / 1%);
+
+    --color-content-primary: #ffffff;
+    --color-content-secondary: #a3a3a3;
+    --color-content-tertiary: #696663;
+    --color-content-inverse: #0a0908;
+
+    --color-accent-orange: #ed712e;
+    --color-accent-red: #eb4b5b;
+    --color-accent-blue: #55a1f2;
+    --color-accent-green: #44cb93;
+    --color-accent-purple: #9d8afe;
+
+    --color-border-primary: #161412;
+
+    --text-heading-medium: 1.5rem;
+    --text-heading-medium--line-height: 2rem;
+    --text-heading-medium--font-weight: 700;
+    --text-heading-small: 1.25rem;
+    --text-heading-small--line-height: 1.5rem;
+    --text-heading-small--font-weight: 700;
+    --text-paragraph-large: 1rem;
+    --text-paragraph-large--line-height: 1.25rem;
+    --text-paragraph-medium: 0.875rem;
+    --text-paragraph-medium--line-height: 1rem;
+    --text-paragraph-small: 0.75rem;
+    --text-paragraph-small--line-height: 0.875rem;
+    --text-label-large: 1rem;
+    --text-label-large--line-height: 1.25rem;
+    --text-label-large--font-weight: 600;
+    --text-label-medium: 0.875rem;
+    --text-label-medium--line-height: 1rem;
+    --text-label-medium--font-weight: 600;
+    --text-label-small: 0.75rem;
+    --text-label-small--line-height: 0.75rem;
+    --text-label-small--font-weight: 600;
+}
+
+@layer base {
+    html {
+        color-scheme: dark;
+        background-color: var(--color-background-primary);
+    }
+
+    body {
+        min-height: 100vh;
+        background-color: var(--color-background-primary);
+        color: var(--color-content-primary);
+        font-family: var(--font-sans);
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background-color: var(--color-accent-orange);
+        color: var(--color-content-inverse);
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent-orange);
+        outline-offset: 2px;
+    }
 }

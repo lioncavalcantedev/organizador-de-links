@@ -1,57 +1,100 @@
-# Instruções do projeto — Organizador de Links
+# Instruções do projeto
 
-Aplicação Laravel para organização de links.
+## Idioma
 
-## Stack
+* Responda sempre em português do Brasil.
+* Escreva mensagens de commit em português.
+* Use inglês somente quando o projeto ou um padrão técnico exigir.
 
-- **PHP** `^8.3`
-- **Laravel** `^13.8`
-- **Banco de dados:** SQLite (`database/database.sqlite`)
-- **Frontend:** Blade + Vite + Tailwind CSS `^4.0`
-- **Formatação:** Laravel Pint
-- **Testes:** PHPUnit `^12` (com Mockery e Collision)
-- **DX:** Laravel Tinker, Pail (logs) e Pao
+## Forma de trabalho
 
-## Comandos
+Antes de modificar arquivos:
 
-Use os scripts do Composer sempre que possível:
+1. analise o código relacionado;
+2. explique o que pretende fazer;
+3. apresente um plano;
+4. informe os arquivos que serão criados ou modificados;
+5. aguarde minha aprovação.
 
-- `composer dev` — sobe servidor, worker de fila, logs (Pail) e Vite simultaneamente
-- `composer test` — limpa config e roda a suíte de testes
-- `composer setup` — instala dependências, gera key, migra e builda assets
-- `php artisan migrate` — aplica migrations
-- `./vendor/bin/pint` — formata o código (rode antes de finalizar)
-- `npm run dev` / `npm run build` — assets via Vite
+Depois da aprovação:
 
-## Convenções de código
+* altere somente os arquivos necessários;
+* preserve a arquitetura e os padrões existentes;
+* execute os testes relacionados;
+* informe os testes executados e seus resultados;
+* apresente um resumo das alterações;
+* informe pendências, limitações ou riscos encontrados;
+* não declare que algo funciona sem uma verificação adequada.
 
-- Siga o **PSR-12** e mantenha o código formatado com **Pint** (não invente um estilo próprio).
-- Use **tipagem estrita**: type hints em parâmetros, retornos e propriedades.
-- Aproveite recursos modernos do Laravel 13 e do PHP 8.3 (ex.: PHP attributes como `#[Fillable]` / `#[Hidden]` nos models, conforme já usado em `app/Models/User.php`).
-- Use **Eloquent** para acesso a dados; evite SQL cru sem necessidade.
-- **Form Requests** para validação; **Resources** para serialização de respostas de API.
-- Nomes: classes em `StudlyCase`, métodos/variáveis em `camelCase`, tabelas/colunas em `snake_case`.
-- Não adicione comentários óbvios; comente apenas intenção não trivial.
+## Laravel
 
-## Estrutura
+* Siga as convenções e a arquitetura do Laravel.
+* Priorize os recursos nativos do framework.
+* Não introduza camadas, abstrações ou padrões sem benefício claro.
+* Utilize Form Requests para validações complexas ou reutilizáveis.
+* Utilize migrations para alterações na estrutura do banco de dados.
+* Utilize policies ou gates para autorização quando necessário.
+* Evite regras de negócio extensas em controllers.
+* Não realize consultas ao banco diretamente nas views.
 
-- `app/Models/` — models Eloquent
-- `app/Http/Controllers/` — controllers
-- `app/Providers/` — service providers
-- `routes/web.php` — rotas web; `routes/console.php` — comandos artisan
-- `database/migrations/` — migrations · `database/factories/` — factories · `database/seeders/` — seeders
-- `resources/views/` — templates Blade · `resources/css` e `resources/js` — assets
-- `config/` — configuração · `tests/` — testes (`Unit` e `Feature`)
+## Código
+
+* Priorize código simples, legível e fácil de manter.
+* Mantenha responsabilidades bem definidas.
+* Evite duplicação de código.
+* Utilize tipagem quando compatível com o projeto.
+* Siga o padrão de código já adotado e a PSR-12 quando aplicável.
+* Não introduza novas dependências sem justificar.
+* Comente apenas trechos importantes ou pouco óbvios.
+* Não altere arquivos fora do escopo solicitado.
+
+## Segurança e banco de dados
+
+* Valide os dados de entrada.
+* Considere autenticação e autorização em operações protegidas.
+* Considere riscos de SQL Injection, XSS, CSRF e exposição de dados.
+* Não exponha credenciais nem registre informações sensíveis.
+* Não desative mecanismos de segurança para facilitar implementações.
+* Não apague dados, tabelas ou colunas sem autorização explícita.
+* Antes de migrations destrutivas, explique os riscos e proponha uma estratégia segura.
+* Considere índices, integridade referencial e impacto das consultas.
 
 ## Testes
 
-- Escreva testes com PHPUnit em `tests/Feature` (fluxos) e `tests/Unit` (lógica isolada).
-- Use **factories** para gerar dados; o ambiente de teste usa banco isolado.
-- Rode `composer test` antes de concluir qualquer mudança relevante.
+* Execute os testes relacionados às alterações.
+* Prefira testes Feature para fluxos da aplicação.
+* Utilize testes Unit para regras isoladas quando fizer sentido.
+* Crie testes para correções de bugs quando possível.
+* Não modifique testes para ocultar falhas reais.
+* Informe claramente quando algum teste não puder ser executado.
 
-## Boas práticas
+## Commits
 
-- Nunca commite segredos. O `.env` é ignorado pelo git — edite `.env.example` quando adicionar novas variáveis.
-- Crie uma migration para qualquer mudança de schema (nunca edite o banco manualmente).
-- Mantenha a lógica de negócio fora dos controllers (services/actions) quando crescer.
-- Rode `pint` e `composer test` antes de finalizar.
+Utilize Conventional Commits em português:
+
+* `feat: adiciona cadastro de usuário`
+* `fix: corrige validação de senha`
+* `refactor: reorganiza serviço de autenticação`
+* `test: adiciona testes para login`
+* `docs: atualiza documentação da API`
+* `chore: atualiza configurações do projeto`
+
+Antes de sugerir uma mensagem de commit:
+
+* analise as alterações atuais;
+* considere somente o conteúdo presente no diff;
+* escolha o tipo que representa a alteração principal;
+* não execute o commit sem autorização explícita.
+
+## Dúvidas e decisões
+
+Quando um requisito não estiver claro:
+
+* faça perguntas antes de implementar;
+* não invente regras de negócio.
+
+Quando houver mais de uma solução válida:
+
+* apresente as principais alternativas;
+* explique os impactos relevantes;
+* recomende a solução mais adequada ao contexto do projeto.
