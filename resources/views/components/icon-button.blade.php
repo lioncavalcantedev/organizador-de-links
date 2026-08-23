@@ -4,6 +4,7 @@
     'variant' => 'tertiary',
     'type' => 'button',
     'href' => null,
+    'preserveDisabledOpacity' => false,
 ])
 
 @php
@@ -22,9 +23,10 @@
     title="{{ $label }}"
     {{ $attributes->class([
         'inline-flex size-10 shrink-0 items-center justify-center rounded-full transition',
-        'enabled:cursor-pointer disabled:cursor-not-allowed disabled:opacity-50',
+        'enabled:cursor-pointer disabled:cursor-not-allowed',
+        $preserveDisabledOpacity ? 'disabled:opacity-100' : 'disabled:opacity-50',
         $classes,
     ]) }}
 >
-    <x-icon :name="$icon" class="size-4" />
+    <x-icon :name="$icon" class="size-5" />
 </{{ $tag }}>
