@@ -9,6 +9,8 @@
 @php
     $classes = match ($variant) {
         'secondary' => 'bg-background-secondary text-accent-orange hover:bg-background-tertiary hover:text-content-primary',
+        'modal-secondary' => 'bg-modal-muted text-modal-accent hover:bg-modal-field',
+        'modal-primary' => 'bg-modal-accent text-content-inverse hover:brightness-110',
         default => 'bg-accent-orange text-content-inverse hover:brightness-110',
     };
 

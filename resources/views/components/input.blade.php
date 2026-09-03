@@ -4,6 +4,7 @@
     'type' => 'text',
     'value' => null,
     'error' => null,
+    'variant' => 'default',
 ])
 
 @php
@@ -28,7 +29,8 @@
             ->class([
                 'w-full rounded-lg border bg-background-secondary px-3 py-2.5 text-paragraph-medium text-content-primary',
                 'placeholder:text-content-tertiary transition-colors hover:bg-background-tertiary focus:outline-none',
-                'border-border-primary focus:border-content-tertiary' => ! $errorMessage,
+                'border-transparent bg-background-secondary placeholder:text-paragraph-small hover:bg-background-tertiary focus:border-modal-accent' => $variant === 'modal' && ! $errorMessage,
+                'border-border-primary focus:border-content-tertiary' => $variant !== 'modal' && ! $errorMessage,
                 'border-accent-red focus:border-accent-red' => $errorMessage,
             ]) }}
     >

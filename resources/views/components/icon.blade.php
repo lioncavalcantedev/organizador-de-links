@@ -42,6 +42,9 @@
         @case('arrow-down')
             <path d="m5 13 7 7 7-7M12 20V4" />
             @break
+        @case('upload')
+            <path d="M12 15V4m-4 4 4-4 4 4M5 20h14" />
+            @break
         @case('close')
             <circle cx="12" cy="12" r="9" fill="currentColor" stroke="none" />
             <path d="m9 9 6 6m0-6-6 6" class="text-content-inverse" />

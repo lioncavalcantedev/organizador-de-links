@@ -16,6 +16,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/', [LinkController::class, 'index'])->name('links.index');
+    Route::post('/links', [LinkController::class, 'store'])->name('links.store');
     Route::patch('/links/{link}/position', [LinkController::class, 'move'])->name('links.position.update');
     Route::post('/logout', LogoutController::class)->name('logout');
 });

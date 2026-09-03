@@ -12,6 +12,11 @@
     --color-background-secondary: #110f0e;
     --color-background-tertiary: #1c1917;
     --color-background-blur: rgb(11 10 9 / 1%);
+    --color-modal-backdrop: rgb(17 15 14 / 18%);
+    --color-modal-background: #0e0704;
+    --color-modal-field: #181311;
+    --color-modal-muted: #151312;
+    --color-modal-accent: #ff8626;
 
     --color-content-primary: #ffffff;
     --color-content-secondary: #a3a3a3;

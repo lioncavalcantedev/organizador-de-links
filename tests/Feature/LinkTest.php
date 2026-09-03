@@ -5,11 +5,98 @@ namespace Tests\Feature;
 use App\Models\Link;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class LinkTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function test_authenticated_user_can_create_a_link_with_an_image(): void
+    {
+        Storage::fake('public');
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->post(route('links.store'), [
+                'title' => 'Vídeo de exemplo',
+                'platform' => 'YouTube',
+                'url' => 'https://www.youtube.com/watch?v=example',
+                'image' => UploadedFile::fake()->image('thumbnail.png', 100, 100),
+            ])
+            ->assertRedirect(route('links.index'))
+            ->assertSessionHas('message', 'Link adicionado com sucesso.');
+
+        $link = $user->links()->sole();
+
+        $this->assertSame('Vídeo de exemplo', $link->title);
+        $this->assertSame('YouTube', $link->category);
+        $this->assertSame('blue', $link->category_variant);
+        $this->assertSame(1, $link->position);
+        Storage::disk('public')->assertExists($link->getRawOriginal('image_url'));
+    }
+
+    public function test_creating_a_link_requires_all_fields(): void
+    {
+        $user = User::factory()->create();
+
+        foreach (['title', 'platform', 'url', 'image'] as $field) {
+            $data = [
+                'title' => 'Vídeo de exemplo',
+                'platform' => 'YouTube',
+                'url' => 'https://example.com',
+                'image' => UploadedFile::fake()->image('thumbnail.png'),
+            ];
+            unset($data[$field]);
+
+            $this->actingAs($user)
+                ->from(route('links.index'))
+                ->post(route('links.store'), $data)
+                ->assertRedirect(route('links.index'))
+                ->assertSessionHasErrors($field);
+        }
+
+        $this->assertDatabaseCount('links', 0);
+    }
+
+    public function test_creating_a_link_rejects_invalid_url_and_image(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->from(route('links.index'))
+            ->post(route('links.store'), [
+                'title' => 'Vídeo de exemplo',
+                'platform' => 'YouTube',
+                'url' => 'ftp://example.com',
+                'image' => UploadedFile::fake()->create('thumbnail.pdf', 100, 'application/pdf'),
+            ])
+            ->assertRedirect(route('links.index'))
+            ->assertSessionHasErrors(['url', 'image']);
+    }
+
+    public function test_creating_a_link_rejects_an_image_larger_than_two_megabytes(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->from(route('links.index'))
+            ->post(route('links.store'), [
+                'title' => 'Vídeo de exemplo',
+                'platform' => 'YouTube',
+                'url' => 'https://example.com',
+                'image' => UploadedFile::fake()->image('thumbnail.png')->size(2049),
+            ])
+            ->assertRedirect(route('links.index'))
+            ->assertSessionHasErrors('image');
+    }
+
+    public function test_guest_cannot_create_a_link(): void
+    {
+        $this->post(route('links.store'), [])
+            ->assertRedirect(route('login'));
+    }
 
     public function test_user_sees_only_own_links_in_persisted_order(): void
     {

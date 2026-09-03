@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\MoveLinkRequest;
+use App\Http\Requests\StoreLinkRequest;
 use App\Models\Link;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -16,6 +17,27 @@ class LinkController extends Controller
         return view('links.index', [
             'links' => request()->user()->links()->orderBy('position')->get(),
         ]);
+    }
+
+    public function store(StoreLinkRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        $imagePath = $validated['image']->store('links', 'public');
+
+        DB::transaction(function () use ($request, $validated, $imagePath): void {
+            $position = $request->user()->links()->lockForUpdate()->max('position') + 1;
+
+            $request->user()->links()->create([
+                'title' => $validated['title'],
+                'url' => $validated['url'],
+                'image_url' => $imagePath,
+                'category' => $validated['platform'],
+                'category_variant' => 'blue',
+                'position' => $position,
+            ]);
+        });
+
+        return to_route('links.index')->with('message', 'Link adicionado com sucesso.');
     }
 
     public function move(Link $link, MoveLinkRequest $request): JsonResponse|RedirectResponse

@@ -12,7 +12,7 @@
     <section class="mx-auto flex min-h-[calc(100vh-2.5rem)] w-full max-w-md flex-col px-1 py-8 sm:px-6 lg:max-w-none lg:px-12 lg:py-16">
         <x-logo class="mx-auto w-48 shrink-0" />
 
-        <div class="my-auto w-full">
+        <div class="mx-auto my-auto w-full max-w-md">
             <div class="mb-10 flex items-end gap-4">
                 <span class="h-px flex-1 bg-accent-orange" aria-hidden="true"></span>
                 <h1 class="text-heading-small text-content-primary">{{ $title }}</h1>
@@ -23,7 +23,7 @@
         </div>
 
         @isset($footer)
-            <div class="mt-10 text-center text-paragraph-small text-content-secondary">
+            <div class="mx-auto mt-10 w-full max-w-md text-center text-paragraph-small text-content-secondary">
                 {{ $footer }}
             </div>
         @endisset
