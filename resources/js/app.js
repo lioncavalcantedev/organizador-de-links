@@ -161,3 +161,125 @@ if (addLinkModal) {
         openModal();
     }
 }
+
+const profileForm = document.querySelector('[data-profile-form]');
+
+if (profileForm) {
+    const status = profileForm.querySelector('[data-profile-status]');
+    const generalError = profileForm.querySelector('[data-profile-error]');
+    const imageInput = profileForm.querySelector('[data-profile-image-input]');
+    const imagePreview = profileForm.querySelector('[data-profile-image-preview]');
+    const imagePlaceholder = profileForm.querySelector('[data-profile-image-placeholder]');
+    const submitButton = document.querySelector('[data-profile-submit]');
+    let previewUrl = null;
+
+    const clearFieldErrors = () => {
+        profileForm.querySelectorAll('[data-profile-field-error]').forEach((error) => {
+            error.textContent = '';
+            error.hidden = true;
+        });
+
+        profileForm.querySelectorAll('[data-profile-field]').forEach((field) => {
+            field.classList.remove('border-accent-red');
+            field.removeAttribute('aria-invalid');
+            field.removeAttribute('aria-describedby');
+        });
+    };
+
+    const showFieldErrors = (errors) => {
+        Object.entries(errors).forEach(([name, messages]) => {
+            const field = profileForm.elements.namedItem(name);
+            const error = profileForm.querySelector(`[data-profile-field-error="${name}"]`);
+
+            if (!(field instanceof HTMLElement) || !error) {
+                return;
+            }
+
+            const errorId = `${name}-profile-error`;
+            field.classList.add('border-accent-red');
+            field.setAttribute('aria-invalid', 'true');
+            field.setAttribute('aria-describedby', errorId);
+            error.id = errorId;
+            error.textContent = messages[0];
+            error.hidden = false;
+        });
+    };
+
+    const updateImagePreview = (url) => {
+        if (!imagePreview || !imagePlaceholder) {
+            return;
+        }
+
+        imagePreview.src = url;
+        imagePreview.hidden = false;
+        imagePlaceholder.hidden = true;
+    };
+
+    imageInput?.addEventListener('change', () => {
+        const [image] = imageInput.files;
+
+        if (!image) {
+            return;
+        }
+
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+        }
+
+        previewUrl = URL.createObjectURL(image);
+        updateImagePreview(previewUrl);
+    });
+
+    profileForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearFieldErrors();
+        status.hidden = true;
+        generalError.hidden = true;
+
+        if (submitButton) {
+            submitButton.disabled = true;
+        }
+
+        try {
+            const response = await fetch(profileForm.action, {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: new FormData(profileForm),
+            });
+            const result = await response.json();
+
+            if (response.status === 422) {
+                showFieldErrors(result.errors ?? {});
+                generalError.textContent = 'Revise os campos destacados e tente novamente.';
+                generalError.hidden = false;
+
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error('Não foi possível atualizar o perfil.');
+            }
+
+            profileForm.elements.name.value = result.profile.name;
+            profileForm.elements.email.value = result.profile.email;
+            profileForm.elements.bio.value = result.profile.bio;
+
+            if (result.profile.image_url) {
+                updateImagePreview(result.profile.image_url);
+            }
+
+            status.textContent = result.message;
+            status.hidden = false;
+        } catch (exception) {
+            generalError.textContent = 'Não foi possível atualizar o perfil. Tente novamente.';
+            generalError.hidden = false;
+        } finally {
+            if (submitButton) {
+                submitButton.disabled = false;
+            }
+        }
+    });
+}

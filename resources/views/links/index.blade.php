@@ -67,7 +67,7 @@
                 preserve-disabled-opacity
                 aria-current="page"
             />
-            <x-icon-button icon="user" label="Perfil (em breve)" disabled preserve-disabled-opacity />
+            <x-icon-button icon="user" label="Perfil" :href="route('profile.edit')" />
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <x-icon-button type="submit" icon="logout" label="Sair" />
